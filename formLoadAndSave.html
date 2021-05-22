@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Gary Davenport">
+
+    <title>Local Form Data Loader and Saver</title>
+    <style>
+        div {
+            padding: 5px;
+        }
+
+        pre code {
+            background-color: whitesmoke;
+            border: 1px solid grey;
+            display: block;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Save and Load Form Data Locally
+    </h1>
+    <p>
+        I wrote 2 functions which allow you to load and save form data locally - loadFormData() and saveFormData(). To
+        add them to your project, make sure you put the 2 functions in your javascript file and add the 2 buttons to
+        your page.
+    </p>
+    <p>
+        The syntax I used for the buttons are the simplest and cleanest looking:
+    <pre>
+            <code>
+&ltbutton onclick="loadFormData()"&gtLoad&lt/button&gt
+&ltbutton onclick="saveFormData()"&gtSave&lt/button&gt
+            </code>
+          </pre>
+    </p>
+    <p>
+        You would add those to your html page. I have listed the 2 functions that would go in your javascript file, or
+        between your &ltscript&gt&lt/script&gt tags. Of course, you can just download the html file and copy them or use
+        your browser developer tools to look at them.
+    <p>
+        Basically, in order for these functions to work, there must be an id tag on each input element or textarea,
+        because the functions need the ids to save the data. The functions look at each element in the page, and if is
+        an input element, the function will save it in the form a JSON pair with the key as the id, and the value as the
+        elements value.
+    </p>
+    <p>
+        There are a couple exceptions, checkboxes and radioboxes have properties called "checked" (i.e.
+        myradio.checked=true) instead of a "value". So in those cases, the JSON key value pair is the elements id and
+        its
+        "checked" value of true or false. Also, textareas are not actually inputs per se, they are their own type of
+        box.
+    </p>
+    <p>
+        So in a nutshell, the functions work by looking at each element, seeing if its an input element or a textarea,
+        and storing the id as a key and the value as its ".value" property or ".checked" property.
+    </p>
+    <p>The saveFormData() function looks at every element, sees if it is an input element or texta area, and collects
+        the key value pairs in a javascript object. The javascript object is "stringified" then saved locally.</p>
+    <p>The loadFormData() function reads in the textstring, parses the string to a javascript object, then loops
+        throught the key value pairs. It gets the element with the correct id, and sets its "value" or "checked"
+        depending
+        on the elements type.</p>
+    </p>
+    <p>
+        Here are some examples of stuff from a form from W3Schools.
+    </p>
+    <hr>
+
+
+    <h2>Sample Form Stuff From W3Schools</h2>
+    <form>
+        <form action="/action_page.php">
+            <label for="fname">First name:</label><br>
+            <input type="text" id="fname" name="fname"><br>
+            <label for="lname">Last name:</label><br>
+            <input type="text" id="lname" name="lname"><br><br>
+            <div>
+                <input type="radio" id="male" name="gender" value="male">
+                <label for="male">Male</label><br>
+                <input type="radio" id="female" name="gender" value="female">
+                <label for="female">Female</label><br>
+                <input type="radio" id="other" name="gender" value="other">
+                <label for="other">Other</label>
+            </div>
+            <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+            <label for="vehicle1"> I have a bike</label><br>
+            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+            <label for="vehicle2"> I have a car</label><br>
+            <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+            <label for="vehicle3"> I have a boat</label><br><br>
+            <div>
+                <label for="favcolor">Select your favorite color:</label>
+                <input type="color" id="favcolor" name="favcolor">
+            </div>
+
+
+            <div>
+                <label for="birthday">Birthday:</label>
+                <input type="date" id="birthday" name="birthday">
+            </div>
+
+            <div>
+                <label for="email">Enter your email:</label>
+                <input type="email" id="email" name="email">
+            </div>
+
+
+            <div>
+                <label for="bdaymonth">Birthday (month and year):</label>
+                <input type="month" id="bdaymonth" name="bdaymonth">
+            </div>
+
+            <div>
+                <label for="quantity">Quantity (between 1 and 5):</label>
+                <input type="number" id="quantity" name="quantity" min="1" max="5">
+            </div>
+
+            <div>
+                <label for="gsearch">Search Google:</label>
+                <input type="search" id="gsearch" name="gsearch">
+            </div>
+
+            <div>
+                <label for="phone">Enter your phone number:</label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}">
+            </div>
+
+
+            <div>
+                <label for="homepage">Add your homepage:</label>
+                <input type="url" id="homepage" name="homepage">
+            </div>
+
+            <div>
+                <label for="week">Select a week:</label>
+                <input type="week" id="week" name="week">
+            </div>
+            <label for="w3review">Review of W3Schools:</label>
+            <div>
+                <textarea id="w3review" name="w3review" rows="4" cols="50">
+        </textarea>
+            </div>
+
+
+            <input type="submit" value="Submit">
+        </form>
+        <hr>
+        <p> Here are my buttons: Go ahead and fill out the form with sample data, then try saving to your local computer. Then refresh
+            the page to erase the form, and try loading from your computer. (Note: If your browser is set to
+            automatically download, the files will be downloaded to your 'downloads' folder or whatever your default
+            'downloads' folder is.  To download to the folder of your choice, set that to happen in your browser download settings.)</p>
+
+
+        <button onclick="loadFormData()">Load</button>
+        <button onclick="saveFormData()">Save</button>
+        <p>These 2 buttons can be used on any form, so long as each element your are saving has an "id=" statement, and
+            of course ids should be unique, that's why they are ids.</p>
+
+    </form>
+    <hr>
+
+    <pre>
+    <code>
+function saveFormData() {
+    //go through all objects on page
+    var elements = document.body.getElementsByTagName("*");
+    numberOfElements = elements.length;
+    //make a javascript object and then stringify;
+    jsonObject = {}
+    for (var i = 0; i < numberOfElements; i++) {
+        if (elements[i].id != "") {
+            switch (elements[i].tagName) {
+                case ("INPUT"):
+                    //see if checkbox, radio or other
+                    if (elements[i].type == "checkbox" || elements[i].type == "radio") {
+                        jsonObject[elements[i].id] = elements[i].checked;
+                    }
+                    else {
+                        jsonObject[elements[i].id] = elements[i].value;
+                    }
+                    break;
+                //don't forget about the textareas too
+                case ("TEXTAREA"):
+                    jsonObject[elements[i].id] = elements[i].value;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    //stringify the object
+    JSONString = JSON.stringify(jsonObject)
+    //use the prompt like a file dialog, inasmuch as you can
+    //this step is to ensure you at least can assign a filename in case
+    //your browser automatically downloads to a folder
+    var saveFileName = prompt("Save as:", "*.json");
+    if (saveFileName == null) {
+        return;
+    }
+    else if (saveFileName == "") {
+        saveFileName = "default.json";
+    }
+    //turn string into blob
+    var blobVersionOfText = new Blob([JSONString], { type: "text/plain" });
+    //make url version of blob
+    var urlVersionOfText = window.URL.createObjectURL(blobVersionOfText);
+    //create a download link which is not displayed
+    //assign the link the filename
+    //assign the link to the url version of the blob
+    //click the download link
+    //then remove the download link
+    var downloadLink = document.createElement("a");
+    downloadLink.style.display = "none";
+    downloadLink.download = saveFileName;
+    downloadLink.href = urlVersionOfText;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    downloadLink.parentElement.removeChild(downloadLink);
+}
+
+
+function loadFormData() {
+    var fileContents = "";
+    //make an input type="file"  ... element> not seen then "click" it
+    var inputTypeIsFile = document.createElement('input');
+    inputTypeIsFile.type = "file";
+    inputTypeIsFile.addEventListener("change", function () {
+        //load json datafile as string
+        var fileInputID = inputTypeIsFile.files[0];
+        var fileReader = new FileReader();
+        fileReader.onload = function (fileLoadedEvent) {
+            var fileContents = fileLoadedEvent.target.result;
+            //convert string to object
+            jsonObject = JSON.parse(fileContents);
+            //loop through all objects and set value using key
+            var x;
+            for (x in jsonObject) {
+                //get element with that id of x
+                thisElement = document.getElementById(x);
+                //see what type of object that object is
+                thisType = thisElement.type;
+                //set property based on object       
+                if (thisType == "checkbox" || thisType == "radio") {
+                    thisElement.checked = jsonObject[x];
+                }
+                else {
+                    thisElement.value = jsonObject[x];
+                }
+            }
+        };
+        fileReader.readAsText(fileInputID, "UTF-8");
+    });
+    inputTypeIsFile.click();
+}
+    </code>
+  </pre>
+
+    <script>
+        function loadFormData() {
+            var fileContents = "";
+            //make an <input type="file"  ... element> not seen then "click" it
+            var inputTypeIsFile = document.createElement('input');
+            inputTypeIsFile.type = "file";
+            inputTypeIsFile.addEventListener("change", function () {
+                //load json datafile as string
+                var fileInputID = inputTypeIsFile.files[0];
+                var fileReader = new FileReader();
+                fileReader.onload = function (fileLoadedEvent) {
+                    var fileContents = fileLoadedEvent.target.result;
+                    //convert string to object
+                    jsonObject = JSON.parse(fileContents);
+                    //loop through all objects and set value using key
+                    var x;
+                    for (x in jsonObject) {
+                        //get element with that id of x
+                        thisElement = document.getElementById(x);
+                        //see what type of object that object is
+                        thisType = thisElement.type;
+                        //set property based on object       
+                        if (thisType == "checkbox" || thisType == "radio") {
+                            thisElement.checked = jsonObject[x];
+                        }
+                        else {
+                            thisElement.value = jsonObject[x];
+                        }
+                    }
+                };
+                fileReader.readAsText(fileInputID, "UTF-8");
+            });
+            inputTypeIsFile.click();
+        }
+
+        function saveFormData() {
+            //go through all objects on page
+            var elements = document.body.getElementsByTagName("*");
+            numberOfElements = elements.length;
+            //make a javascript object and then stringify;
+            jsonObject = {}
+            for (var i = 0; i < numberOfElements; i++) {
+                if (elements[i].id != "") {
+                    switch (elements[i].tagName) {
+                        case ("INPUT"):
+                            //see if checkbox, radio or other
+                            if (elements[i].type == "checkbox" || elements[i].type == "radio") {
+                                jsonObject[elements[i].id] = elements[i].checked;
+                            }
+                            else {
+                                jsonObject[elements[i].id] = elements[i].value;
+                            }
+                            break;
+                        //don't forget about the textareas too
+                        case ("TEXTAREA"):
+                            jsonObject[elements[i].id] = elements[i].value;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            //stringify the object
+            JSONString = JSON.stringify(jsonObject)
+            //use the prompt like a file dialog, inasmuch as you can
+            //this step is to ensure you at least can assign a filename in case
+            //your browser automatically downloads to a folder
+            var saveFileName = prompt("Save as:", "*.json");
+            if (saveFileName == null) {
+                return;
+            }
+            else if (saveFileName == "") {
+                saveFileName = "default.json";
+            }
+            //turn string into blob
+            var blobVersionOfText = new Blob([JSONString], { type: "text/plain" });
+            //make url version of blob
+            var urlVersionOfText = window.URL.createObjectURL(blobVersionOfText);
+            //create a download link which is not displayed
+            //assign the link the filename
+            //assign the link to the url version of the blob
+            //click the download link
+            //then remove the download link
+            var downloadLink = document.createElement("a");
+            downloadLink.style.display = "none";
+            downloadLink.download = saveFileName;
+            downloadLink.href = urlVersionOfText;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            downloadLink.parentElement.removeChild(downloadLink);
+        }
+    </script>
+</body>
+
+</html>
